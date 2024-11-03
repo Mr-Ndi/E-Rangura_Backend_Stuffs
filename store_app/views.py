@@ -3,6 +3,7 @@ import json
 from django.http import JsonResponse
 from .views import product_list, product_detail
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
 from .models import Product
 
 urlpatterns = [
