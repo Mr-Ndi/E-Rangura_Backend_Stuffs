@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-c$+)ubj%oo0@d&s_xkc+w3f=$$i_4vy-z+)2+)ck)ek8s720n6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'store_app',
+    'orders_app',
 ]
 
 MIDDLEWARE = [
@@ -75,8 +77,12 @@ WSGI_APPLICATION = 'E_Store.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME':'myproject',
+        'USER':'ninshuti',
+        'PASSWORD':'byasana',
+        'HOST':'localhost',
+        'PORT':''
     }
 }
 
