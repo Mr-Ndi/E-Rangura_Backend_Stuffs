@@ -40,3 +40,20 @@ def upload_product(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+def product_list(request):
+    if request.method == 'GET':
+        products = Product.objects.all().values('id', 'name', 'description', 'price', 'stock_quantity')
+        return JsonResponse(list(products), safe=False)
+
+def product_detail(request, product_id):
+    if request.method == 'GET':
+        product = get_object_or_404(Product, id=product_id)
+        product_data = {
+            'id': product.id,
+            'name': product.name,
+            'description': product.description,
+            'price': str(product.price),  
+            'stock_quantity': product.stock_quantity,
+        }
+        return JsonResponse(product_data)
