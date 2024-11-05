@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import dj_database_url
 from pathlib import Path
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -22,12 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-c$+)ubj%oo0@d&s_xkc+w3f=$$i_4vy-z+)2+)ck)ek8s720n6'
+# SECRET_KEY = 'django-insecure-c$+)ubj%oo0@d&s_xkc+w3f=$$i_4vy-z+)2+)ck)ek8s720n6'
+SECREAT_KEY = os.environ.get("SECREAT_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
+DEBUG = os.environ.get("DEBUG","False").lower == "true"
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+# ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -87,7 +89,9 @@ DATABASES = {
         'PORT':''
     }
 }
-DATABASES['default']=dj_database_url.parse("postgresql://ninshuti:4uAVC6hULNN5GzDEM72bLlOrBOMyTgYH@dpg-csk5e8btq21c73disnu0-a.oregon-postgres.render.com/e_store_kdh3")
+database_url = os.environ.get("DATABASE_URL")
+# postgresql://ninshuti:4uAVC6hULNN5GzDEM72bLlOrBOMyTgYH@dpg-csk5e8btq21c73disnu0-a.oregon-postgres.render.com/e_store_kdh3
+DATABASES['default']=dj_database_url.parse(database_url)
 
 
 # Password validation
