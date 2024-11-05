@@ -13,6 +13,10 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import dj_database_url
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -29,8 +33,8 @@ SECREAT_KEY = os.environ.get("SECREAT_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG","False").lower == "true"
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
-# ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
+# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = ['0.0.0.0', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -92,6 +96,8 @@ DATABASES = {
 }
 database_url = os.environ.get("DATABASE_URL")
 # postgresql://ninshuti:4uAVC6hULNN5GzDEM72bLlOrBOMyTgYH@dpg-csk5e8btq21c73disnu0-a.oregon-postgres.render.com/e_store_kdh3
+if database_url is None:
+    raise ValueError("DATABASE_URL environment variable is not set.")
 DATABASES['default']=dj_database_url.parse(database_url)
 
 
