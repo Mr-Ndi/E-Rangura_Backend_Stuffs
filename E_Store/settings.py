@@ -18,7 +18,9 @@ if not SECRET_KEY:
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 # ALLOWED_HOSTS configuration
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+# ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",") + ["127.0.0.1", "localhost"]
+
 if not ALLOWED_HOSTS:
     raise ValueError("The ALLOWED_HOSTS environment variable must not be empty.")
 

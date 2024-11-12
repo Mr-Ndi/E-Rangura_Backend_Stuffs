@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 @csrf_exempt
 def upload_product(request):
+    logger.info("Received request method: %s", request.method)
     if request.method == 'POST':
         try:
         
