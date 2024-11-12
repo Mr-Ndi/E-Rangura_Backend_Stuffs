@@ -15,14 +15,12 @@ def create_order(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            user = request.user  # Ensure the user is logged in
 
-            # Ensure the user is logged in (this will be set automatically by JWT)
-            user = request.user
-
-            # Create the order
+            # Initialize order with the user
             order = Order.objects.create(user=user)
 
-            # Add items to the order
+            # Add items to the order and calculate the total amount
             order_items = data.get('items', [])
             total_amount = 0
             for item in order_items:
@@ -39,7 +37,7 @@ def create_order(request):
                     price_at_purchase=price_at_purchase,
                 )
 
-            # Update total amount on order
+            # Update and save the total amount on the order
             order.total_amount = total_amount
             order.save()
 
@@ -49,12 +47,11 @@ def create_order(request):
                 'total_amount': total_amount,
                 'items': order_items
             }, status=201)
-        
+
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
-
 def order_history(request):
     if request.user.is_authenticated:
         orders = Order.objects.filter(user=request.user).values(
