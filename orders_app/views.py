@@ -5,16 +5,18 @@ from django.shortcuts import get_object_or_404
 from .models import Order, OrderItem
 from store_app.models import Product
 from django.contrib.auth.decorators import login_required
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 import json
 
-@csrf_exempt
-@login_required
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])  # Ensure only authenticated users can create an order
 def create_order(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
 
-            # Ensure the user is logged in
+            # Ensure the user is logged in (this will be set automatically by JWT)
             user = request.user
 
             # Create the order
