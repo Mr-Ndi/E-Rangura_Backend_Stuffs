@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'store_app',
     'orders_app',
     'rest_framework',
-    'user',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -88,6 +88,11 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
