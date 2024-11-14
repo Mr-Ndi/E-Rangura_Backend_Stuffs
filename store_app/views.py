@@ -83,9 +83,63 @@ def product_detail(request, product_id):
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+@csrf_exempt
+def update_product(request, product_id):
+    if request.method == 'PUT':
+        try:
+            data = json.loads(request.body)
+            product = get_object_or_404(Product, id=product_id)
+
+            name = data.get('name', product.name)  # Use existing name if not provided
+            description = data.get('description', product.description)
+            price = data.get('price', product.price)
+            stock_quantity = data.get('stock_quantity', product.stock_quantity)
+
+            # Update fields only if they are provided
+            if name:
+                product.name = name
+            if description:
+                product.description = description
+            if price is not None:
+                product.price = price
+            if stock_quantity is not None:
+                product.stock_quantity = stock_quantity
+
+            product.save()
+
+            return JsonResponse({'message': 'Product updated successfully!'}, status=200)
+
+        except json.JSONDecodeError:
+            logger.error("Invalid JSON in request body.")
+            return JsonResponse({'error': 'Invalid JSON'}, status=400)
+
+        except Exception as e:
+            logger.error(f"Error updating product with ID {product_id}: {str(e)}")
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
+
+@csrf_exempt
+def delete_product(request, product_id):
+    if request.method == 'DELETE':
+        try:
+            product = get_object_or_404(Product, id=product_id)
+            product.delete()
+            
+            return JsonResponse({'message': 'Product deleted successfully!'}, status=204)
+
+        except Exception as e:
+            logger.error(f"Error deleting product with ID {product_id}: {str(e)}")
+            return JsonResponse({'error': str(e)}, status=500)
+
+    return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 urlpatterns = [
     path('upload/', upload_product, name='upload_product'), 
     path('products/', product_list, name='product_list'),   
     path('products/<int:product_id>/', product_detail, name='product_detail'), 
+    path('products/update/<int:product_id>/', update_product, name='update_product'),  # Update endpoint
+    path('products/delete/<int:product_id>/', delete_product, name='delete_product'),  # Delete endpoint
 ]
