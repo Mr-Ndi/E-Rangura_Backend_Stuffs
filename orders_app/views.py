@@ -76,3 +76,45 @@ def order_detail(request, order_id):
         return JsonResponse(order_data)
     else:
         return JsonResponse({'error': 'Unauthorized access'}, status=403)
+
+@api_view(['PUT'])
+@permission_classes([IsAuthenticated])
+def update_order(request, order_id):
+    try:
+        order = get_object_or_404(Order, id=order_id)
+        
+        if order.user != request.user:
+            return JsonResponse({'error': 'Unauthorized access'}, status=403)
+
+        data = json.loads(request.body)
+        status = data.get('status')
+
+        if status:
+            order.status = status  # Update the status of the order
+            order.save()
+        
+        return JsonResponse({'message': 'Order updated successfully!'}, status=200)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_order(request, order_id):
+    try:
+        order = get_object_or_404(Order, id=order_id)
+
+        if order.user != request.user:
+            return JsonResponse({'error': 'Unauthorized access'}, status=403)
+
+        # Delete the associated OrderItems first (optional based on your design)
+        OrderItem.objects.filter(order=order).delete()
+        
+        # Now delete the Order itself
+        order.delete()
+
+        return JsonResponse({'message': 'Order deleted successfully!'}, status=204)
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
