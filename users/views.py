@@ -57,3 +57,22 @@ def login_user(request):
         })
     else:
         return Response({'error': 'Invalid username or password.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+@api_view(['GET'])
+def list_users(request):
+    users = User.objects.all().values('id', 'username', 'email', 'password')
+    return Response(users, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_user(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        user_data = {
+            'id': user.id,
+            'username': user.username,
+            'email': user.email,
+            'password': user.password
+        }
+        return Response(user_data, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        raise Http404("User not found")
