@@ -8,36 +8,49 @@ from rest_framework.decorators import api_view
 from django.contrib.auth.hashers import make_password
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
+import logging
 
-# User Registration API View
+
+# Set up logging
+logger = logging.getLogger(__name__)
+
 @api_view(['POST'])
 def register_user(request):
-    if request.method == 'POST':
-        username = request.data.get('username')
-        email = request.data.get('email')
-        password = request.data.get('password')
+    try:
+        if request.method == 'POST':
+            username = request.data.get('username')
+            email = request.data.get('email')
+            password = request.data.get('password')
+            
+            # Check for missing fields
+            if not username or not email or not password:
+                return Response({'error': 'Username, email, and password are required.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Check for existing username and email
+            if User.objects.filter(username=username).exists():
+                return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            if User.objects.filter(email=email).exists():
+                return Response({'error': 'Email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
+            
+            # Create new user
+            user = User.objects.create(
+                username=username,
+                email=email,
+                password=make_password(password),  # Hash the password
+            )
+            
+            return Response({
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'message': 'User created successfully!'
+            }, status=status.HTTP_201_CREATED)
+    
+    except Exception as e:
+        logger.error(f"Error during user registration: {str(e)}")
+        return Response({'error': 'An unexpected error occurred.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)    
 
-        if not username or not email or not password:
-            return Response({'error': 'Username, email, and password are required.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if User.objects.filter(username=username).exists():
-            return Response({'error': 'Username already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        if User.objects.filter(email=email).exists():
-            return Response({'error': 'Email already exists.'}, status=status.HTTP_400_BAD_REQUEST)
-
-        user = User.objects.create(
-            username=username,
-            email=email,
-            password=make_password(password)  # Hash the password
-        )
-
-        return Response({
-            'id': user.id,
-            'username': user.username,
-            'email': user.email,
-            'message': 'User created successfully!'
-        }, status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
 def login_user(request):

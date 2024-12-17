@@ -5,10 +5,12 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
 from .models import Product
 import logging
+from rest_framework.decorators import api_view
+from rest_framework.permissions import IsAuthenticated
 
 logger = logging.getLogger(__name__)
 
-@csrf_exempt
+@api_view(['POST'])
 def upload_product(request):
     logger.info("Received request method: %s", request.method)
     if request.method == 'POST':
@@ -45,6 +47,7 @@ def upload_product(request):
             return JsonResponse({'error': str(e)}, status=500)
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
+
 
 
 def product_list(request):
