@@ -1,8 +1,8 @@
 from django.db import models
-from Sellers import Sellers
+from Sellers.models import Sellers
 
 class Product(models.Model):
-    product_id = models.AutoFiels(primary_key=True)
+    product_id = models.AutoField(primary_key=True)
     name = models.ChatField(max_length=20)
     price = models.decimalField()
     stock_quantity = models.integerField()
