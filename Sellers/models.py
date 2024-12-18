@@ -3,7 +3,7 @@ from django.db import models
 class Sellers(models.Model):
     seller_id = models.IntegerField(primary_key=True)
     names = models.CharField(max_length=32)
-    email = model.EmailField()
+    email = models.EmailField()
     password = models.CharField(max_length=32)
     district = models.CharField(max_length=32)
     sector = models.CharField(max_length=32)
