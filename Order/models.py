@@ -1,12 +1,12 @@
 from django.db import models
-from Seller.models import Seller
-from Prodects.models import Product
+from Sellers.models import Seller
+from Products.models import Product
 
 class Order(models.Model):
-    order_id = models.AutoField(primmary_key=True)
+    order_id = models.AutoField(primary_key=True)
     owner_id = models.ForeignKey(Seller, on_delete=models.CASCADE)
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField(max_length=20)
+    quantity = models.IntegerField()
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('decline', 'Declined'),
