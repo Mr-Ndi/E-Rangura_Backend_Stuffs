@@ -9,6 +9,7 @@ class Seller(models.Model):
     sector = models.CharField(max_length=32)
     telephone = models.CharField(max_length=13)
     username = models.CharField(max_length=32, unique=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=False)
 
     def __str__(self):
         return self.names
