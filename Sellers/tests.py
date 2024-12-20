@@ -60,3 +60,31 @@ class NewSellerViewTest(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Seller.objects.count(), 1)
         self.assertEqual(Seller.objects.get().names, "Ninshuti Poli Ndiramiye")
+
+class UserLoginTest(TestCase):
+    def setUp(self):
+        self.username = 'Ndi'
+        self.password = 'test Ndi'
+        self.user = User.objects.create_user(username=self.username, password=self.password)
+        self.token = Token.objects.create(user=self.user)
+
+    def test_login_success(self):
+        url = reverse('login_user')
+        data = {
+            "username": self.username,
+            "password": self.password
+        }
+
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('Login succesfull', response.json().get('message'))
+
+    def test_login_failue(self):
+        url = reverse('login_user')
+        data = {
+            "username": self.username,
+            "password": "wrongpassword"
+        }
+        response = self.client.post(url, data=data)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('Invalid credentials', response.json().get('error'))
