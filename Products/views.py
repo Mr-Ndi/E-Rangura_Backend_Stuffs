@@ -36,11 +36,11 @@ def retrive_product(request):
         products = Product.objects.all()
 
         if product_id:
-            prodocts = Product.filter(product_id=product_id)
+            products = Product.filter(product_id=product_id)
         if owner_id:
-            prodocts = Product.filter(owner_id=owner_id)
+            products = Product.filter(owner_id=owner_id)
         if name:
-            prodocts = Product.filter(name=name)
+            products = Product.filter(name=name)
 
         products_data = []
         for product in products:

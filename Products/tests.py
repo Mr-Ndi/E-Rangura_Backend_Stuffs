@@ -65,3 +65,45 @@ class ProductCreationTest(TestCase):
         )
 
         self.assertEqual(response.status_code, 401)
+
+
+class ProductRetrivalTest(TestCase):
+    def setUp(self):
+        self.seller = Seller.objects.create_user(
+            username='testUser',
+            password='testpass123',
+            email='test@example.com',
+            names='uwo kwifashishwa',
+            district='Nyarugenge',
+            sector='Rwampara',
+            telephone='0792334455'
+        )
+
+        self.product1 = Product.objects.create(
+            name="Test Product 1",
+            price=1000,
+            stock_quantity=50,
+            unit="kg",
+            minimum_for_deliver=5,
+            description="Test description 1",
+            owner_id=self.seller
+        )
+        
+        self.product2 = Product.objects.create(
+            name="Test Product 2",
+            price=2000,
+            stock_quantity=100,
+            unit="pieces",
+            minimum_for_deliver=10,
+            description="Test description 2",
+            owner_id=self.seller
+        )
+
+    def test_retrive_all_products(self):
+        url = reverse('retrice_product')
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(len(data['products']), 2)
+        self.assertEqual(data['message'], 'Product retrived succesfully')
