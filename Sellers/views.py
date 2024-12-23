@@ -2,6 +2,7 @@ import json
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Seller
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
@@ -48,7 +49,13 @@ def login_user(request):
     user = authenticate(request, username=username, password=password)
 
     if user is not None:
-        return JsonResponse({'message': 'Login succesfull', 'User': user.username}, status=200)
+        refresh = RefreshToken.for_user(user)
+        return JsonResponse({
+            'message': 'Login succesfull',
+            'User': user.username,
+            'access': str(refresh.access_token),
+            'refresh': str(refresh)
+        }, status=200)
     
     else:
         return JsonResponse({'error': 'Invalid credentials'}, status=400)

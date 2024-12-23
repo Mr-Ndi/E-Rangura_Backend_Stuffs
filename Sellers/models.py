@@ -18,7 +18,7 @@ class SellerManager(BaseUserManager):
         return user
 
 class Seller(AbstractBaseUser):
-    seller_id = models.AutoField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     names = models.CharField(max_length=32)
     email = models.EmailField(unique=True)
     district = models.CharField(max_length=32)
