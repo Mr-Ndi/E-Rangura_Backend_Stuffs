@@ -60,11 +60,15 @@ def login_user(request):
     else:
         return JsonResponse({'error': 'Invalid credentials'}, status=400)
     
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def logout_user(request):
     try:
         refresh_token = request.data.get('refresh')
+        
+        if not refresh_token:
+            return JsonResponse({'error': 'Refresh token is required'}, status=400)
 
         RefreshToken(refresh_token).blacklist()
 

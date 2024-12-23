@@ -69,7 +69,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-CORS_ALLOWE_ALL_ORIGINS = os.environ.get('ALLOWED')
+# CORS_ALLOWE_ALL_ORIGINS = os.environ.get('ALLOWED')
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+]
+
 
 ROOT_URLCONF = 'Sokoni.urls'
 
