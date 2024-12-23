@@ -5,22 +5,29 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 import json
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def upload_product(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
+            required_fields = ['name', 'price', 'stock_quantity', 'unit', 'minimum_for_deliver', 'description']
+            for field in required_fields:
+                if field not in request.data:
+                    return JsonResponse({'error': f'Missing field: {field}'}, status=400)
+            data = request.data
+
             product = Product(
                 name=data.get('name'),
                 price=data.get('price'),
                 stock_quantity=data.get('stock_quantity'),
-                unit=data.get('data'),
+                unit=data.get('unit'),
                 minimum_for_deliver=data.get('minimum_for_deliver'),
                 description=data.get('description'),
                 owner_id=request.user
             )
             product.save()
+            
             return JsonResponse({'message': 'Product uploaded successfully !','product_id':product.product_id}, status=201)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
@@ -53,7 +60,7 @@ def retrive_product(request):
                 'minimum_for_deliver': product.minimum_for_deliver,
                 'description':product.description,
                 'owner_id': product.owner_id,
-                # 'created_at': product.created_at if hasattr(product, 'created_at') else None
+                'created_at': product.created_at if hasattr(product, 'created_at') else None
             })
 
         return JsonResponse({

@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'Sellers',
     'Products',
     'Order',
+    'rest_framework_simplejwt.token_blacklist',
 ]
 
 REST_FRAMEWORK = {
@@ -68,15 +69,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:8000",
-    "http://127.0.0.1:5173",
-]
-
-# CORS_ALLOWED_ORIGINS = os.environ.get('ALLOWED_ORIGINS')
-# CORS_ALLOWED_ORIGINS = True
+CORS_ALLOWE_ALL_ORIGINS = os.environ.get('ALLOWED')
 
 ROOT_URLCONF = 'Sokoni.urls'
 
@@ -132,7 +125,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Kigali'
 
 USE_I18N = True
 

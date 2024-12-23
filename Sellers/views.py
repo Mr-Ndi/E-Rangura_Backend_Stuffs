@@ -1,7 +1,7 @@
 import json
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import Seller
 from django.contrib.auth import authenticate
@@ -59,3 +59,16 @@ def login_user(request):
     
     else:
         return JsonResponse({'error': 'Invalid credentials'}, status=400)
+    
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def logout_user(request):
+    try:
+        refresh_token = request.data.get('refresh')
+
+        RefreshToken(refresh_token).blacklist()
+
+        return JsonResponse({'message': 'Logout successful'}, status=205)  # 205 Reset Content
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)

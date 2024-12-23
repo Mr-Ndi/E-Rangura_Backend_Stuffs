@@ -8,8 +8,10 @@ class Product(models.Model):
     stock_quantity = models.IntegerField()
     unit = models.CharField(max_length=3)
     minimum_for_deliver = models.IntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
     description = models.CharField(max_length=200)
     owner_id = models.ForeignKey(Seller, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.name
