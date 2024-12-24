@@ -25,9 +25,17 @@ class Order(models.Model):
 
     def clean(self):
         from django.core.exceptions import ValidationError
+        if self.quantity <= 0:
+            raise ValidationError({
+                'quantity': 'Order quantity must be greater than zero'
+            })
         if self.quantity > self.product_id.stock_quantity:
             raise ValidationError({
                 'quantity': 'Order quantity exceeds available stock'
             })
+        
+    def get_order_summary(self):
+        return f"Order ID :{self.order_id}, Product: {self.product_id.name}, Quantity: {self.quantity}, Total Price: {self.total_price}"
+    
     def __str__(self):
         return str(self.order_id)
